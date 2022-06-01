@@ -311,7 +311,7 @@ void ContiguityHeuristic(vector<int> &heuristicSolution, graph* g, const vector<
         if (model.get(GRB_IntAttr_Status) == 2 || model.get(GRB_IntAttr_Status) == 9) // model was solved to optimality (subject to tolerances), so update UB.
         {
             UB = model.get(GRB_DoubleAttr_ObjVal); // we get a warm start from previous round, so iterUB will only get better
-            cout << "  UB from ContiguityHeuristic restricted IP = " << UB << " using centers : ";
+            printf("  UB from ContiguityHeuristic restricted IP = %.8f using centers : ", UB);
             for (int i = 0; i < k; ++i)
                 cout << centers[i] << " ";
             cout << endl;
@@ -335,11 +335,11 @@ void ContiguityHeuristic(vector<int> &heuristicSolution, graph* g, const vector<
         cout << "Exception during optimization" << endl;
     }
 
-    cout << "UB at end of ContiguityHeuristic = " << UB << endl;
+    printf("UB at end of ContiguityHeuristic = %.8f\n", UB);
     double obj = 0;
     for (int i = 0; i < g->nr_nodes; ++i)
         obj += w[i][heuristicSolution[i]];
-    cout << "UB of (contiguous) heuristicSolution = " << obj << endl;
+    printf("UB of (contiguous) heuristicSolution = %.8f\n", obj);
     if (cb)
         delete cb;
     return;
@@ -416,7 +416,7 @@ vector<int> HessHeuristic(graph* g, const vector<vector<double> >& w, const vect
         if (model.get(GRB_IntAttr_Status) == 2 || model.get(GRB_IntAttr_Status) == 9) // model was solved to optimality (subject to tolerances), so update UB.
         {
           iterUB = model.get(GRB_DoubleAttr_ObjVal); // we get a warm start from previous round, so iterUB will only get better
-          cout << "  UB from restricted IP = " << iterUB << " using centers : ";
+          printf("  UB from restricted IP = %.8f using centers : ", iterUB);
           for (int i = 0; i < k; ++i)
             cout << centers[i] << " ";
           cout << endl;
@@ -480,7 +480,7 @@ vector<int> HessHeuristic(graph* g, const vector<vector<double> >& w, const vect
         UB = iterUB;
         heuristicSolution = iterHeuristicSolution;
       }
-      cout << "In iteration " << iter << " of HessHeuristic, objective value of incumbent is = " << UB << endl;
+      printf("In iteration %d of HessHeuristic, objective value of incumbent is = %.8f\n", iter, UB);
     }
   }
   catch (GRBException e) {
@@ -494,11 +494,11 @@ vector<int> HessHeuristic(graph* g, const vector<vector<double> >& w, const vect
     cout << "Exception during optimization" << endl;
   }
 
-  cout << "UB at end of HessHeuristic = " << UB << endl;
+  printf("UB at end of HessHeuristic = %.8f\n", UB);
   double obj = 0;
   for (int i = 0; i < g->nr_nodes; ++i)
     obj += w[i][heuristicSolution[i]];
-  cout << "UB of heuristicSolution = " << obj << endl;
+  printf("UB of heuristicSolution = %.8f\n", obj);
   if (cb)
     delete cb;
   return heuristicSolution;
@@ -507,7 +507,7 @@ vector<int> HessHeuristic(graph* g, const vector<vector<double> >& w, const vect
 bool LocalSearch(graph* g, const vector<vector<double> >& w, const vector<int>& population,
   int L, int U, int k, vector<int>&heuristicSolution, double &UB)
 {
-    cout << endl << "Beginning LOCAL SEARCH with UB = " << UB << "\n\n";
+    printf("\nBeginning LOCAL SEARCH with UB = %.8f\n\n", UB);
 
     if(heuristicSolution.size() < g->nr_nodes)
     {
@@ -600,7 +600,7 @@ bool LocalSearch(graph* g, const vector<vector<double> >& w, const vector<int>& 
               if (newUB < UB)
               {
                 improvement = true;
-                cout << "found better UB from LS restricted IP = " << newUB;
+                printf("found better UB from LS restricted IP = %.8f", newUB);
                 UB = newUB;
                 // update centers, costs, and var fixings
                 centers[c_i] = u;
@@ -641,11 +641,11 @@ bool LocalSearch(graph* g, const vector<vector<double> >& w, const vector<int>& 
       cout << "Exception during optimization" << endl;
       return false;
     }
-    cout << "UB at end of local search heuristic = " << UB << endl;
+    printf("UB at end of local search heuristic = %.8f\n", UB);
     double obj = 0;
     for (int i = 0; i < g->nr_nodes; ++i)
       obj += w[i][heuristicSolution[i]];
-    cout << "UB of heuristicSolution = " << obj << endl;
+    printf("UB of heuristicSolution = %.8f\n", obj);
     return true;
 }
 

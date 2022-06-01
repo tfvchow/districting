@@ -131,7 +131,7 @@ int main(int argc, char *argv[])
   chrono::duration<double> heuristic_duration = chrono::steady_clock::now() - heuristic_start;
   dump_maybe_inf(UB);
   ffprintf(rp.output, "%.2lf, ", heuristic_duration.count());
-  printf("Best solution after %d of HessHeuristic is %.2lf\n", maxIterations, UB);
+  printf("Best solution after %d of HessHeuristic is %.8f\n", maxIterations, UB);
 
   // run local search
   auto LS_start = chrono::steady_clock::now();
@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
   chrono::duration<double> LS_duration = chrono::steady_clock::now() - LS_start;
   dump_maybe_inf(UB);
   ffprintf(rp.output, "%.2lf, ", LS_duration.count());
-  printf("Best solution after local search is %.2lf\n", UB);
+  printf("Best solution after local search is %.8f\n", UB);
 
   if (arg_model != "hess" && ls_ok)  // solve contiguity-constrained problem, restricted to centers from heuristicSolution
   {
