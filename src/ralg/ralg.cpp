@@ -1,7 +1,7 @@
 #include "ralg.h"
 #include <cfloat>
-#include <mkl_cblas.h>
-#include <malloc.h>
+#include <Accelerate/Accelerate.h>
+#include <stdlib.h>
 #include <cstdio>
 #include <ctime>
 
@@ -168,7 +168,7 @@ double ralg(const ralg_options* opt,
     d_var = cblas_dnrm2(DIMENSION, tmp2, 1);
     if (opt->output && (iter-1) % opt->output_iter == 0)
     {
-        printf("iter = %d, step = %.14e, func = %.14e, norm = %.14e, diff = %.14e\n", iter, step, f_val, d_var, step_diff);
+        printf("iter = %d, step = %.8f, func = %.8f, norm = %.8f, diff = %.8f\n", iter, step, f_val, d_var, step_diff);
     }
     if(d_var > opt->reset)
     {
@@ -204,8 +204,8 @@ double ralg(const ralg_options* opt,
   time_t t_done = time(NULL);
 
   printf("ralg done, iterations : %d, matrix resets : %d\n", iter, nr_matrix_reset);
-  printf("f_optimal = %e\n", f_optimal);
-  printf("Time stats : init %.1lf, compute %.1lf, total %.1lf\n", difftime(t_inited, t_started), difftime(t_done, t_inited), difftime(t_done, t_started));
+  printf("f_optimal = %.8f\n", f_optimal);
+  printf("Time stats : init %.1f, compute %.1f, total %.1f\n", difftime(t_inited, t_started), difftime(t_done, t_inited), difftime(t_done, t_started));
 
   //memory release
   free(tmp2);

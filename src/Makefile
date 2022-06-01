@@ -1,4 +1,4 @@
-GUROBI_FLAGS=-I"$(GUROBI_HOME)/include" -L"$(GUROBI_HOME)/lib" -lgurobi91 -lgurobi_g++5.2
+GUROBI_FLAGS=-I"$(GUROBI_HOME)/include" -L"$(GUROBI_HOME)/lib" -lgurobi95 -lgurobi_c++
 GENERAL_FLAGS=-std=c++11 -O3 -Wno-sign-compare -Wall -Wextra
 
 
@@ -8,17 +8,17 @@ TARGETS=districting ralg_hot_start translate gridgen
 
 all: check-env check-mkl-env $(TARGETS)
 
-no-mkl: MKLINCLUDE=-Iralg/cblas
-no-mkl: MKL_FLAGS= ralg/cblas/mkl_cblas.o
-no-mkl: check-env ralg/cblas/mkl_cblas.o $(TARGETS)
+no-mkl: MKLINCLUDE=
+no-mkl: MKL_FLAGS= -framework Accelerate
+no-mkl: check-env $(TARGETS)
 
 districting: $(COMMON_OBJ) main.o
 	g++ main.o $(COMMON_OBJ) -o districting $(GENERAL_FLAGS) $(GUROBI_FLAGS) $(MKL_FLAGS)
-	cp districting ../
+
 
 ralg_hot_start: $(COMMON_OBJ) main_hot_start.o
 	g++ main_hot_start.o $(COMMON_OBJ) -o ralg_hot_start $(GENERAL_FLAGS) $(GUROBI_FLAGS) $(MKL_FLAGS)
-	cp ralg_hot_start ../
+
 
 ralg.o: ralg/*
 	g++ -c -Wall ralg/ralg.cpp -O3 $(MKLINCLUDE) -std=c++11
