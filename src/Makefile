@@ -3,7 +3,7 @@ GENERAL_FLAGS=-std=c++11 -O3 -Wno-sign-compare -Wall -Wextra
 
 
 # to save some space
-COMMON_OBJ=version.c graph.o lagrange.o io.o hess.o flow.o cut.o ralg.o
+COMMON_OBJ=version.c graph.o lagrange.o io.o hess.o flow.o cut.o ralg.o rng.o
 TARGETS=districting ralg_hot_start translate gridgen
 
 all: check-env check-mkl-env $(TARGETS)

@@ -9,6 +9,8 @@
 #include "models.h"
 #include "io.h"
 
+#include "rng.h"
+
 using namespace std;
 
 double get_objective_coefficient(const vector<vector<int>>& dist, const vector<int>& population, int i, int j)
@@ -345,7 +347,7 @@ void ContiguityHeuristic(vector<int> &heuristicSolution, graph* g, const vector<
     return;
 }
 
-vector<int> HessHeuristic(graph* g, const vector<vector<double> >& w, const vector<int>& population, int L, int U, int k, double &UB, int maxIterations, bool do_cuts)
+vector<int> HessHeuristic(SimpleRNG* s, graph* g, const vector<vector<double> >& w, const vector<int>& population, int L, int U, int k, double &UB, int maxIterations, bool do_cuts)
 {
   vector<int> heuristicSolution(g->nr_nodes, -1);
 
@@ -364,15 +366,11 @@ vector<int> HessHeuristic(graph* g, const vector<vector<double> >& w, const vect
 
     hess_params p = build_hess_restricted(&model, g, w, population, centers, L, U, k);
 
-    vector<int> allNodes(g->nr_nodes, -1);
-    for (int i = 0; i < g->nr_nodes; ++i) allNodes[i] = i;
-
     for (int iter = 0; iter < maxIterations; ++iter)
     {
       // select k centers at random
-      random_shuffle(allNodes.begin(), allNodes.end()); //FIXME O(n) instead of O(k)
       for (int i = 0; i < k; ++i)
-        centers[i] = allNodes[i];
+        centers[i] = (int) floor(g->nr_nodes * s->GetUniform());
 
       double iterUB = MYINFINITY; // the best UB found in this iteration (iter)
       double oldIterUB;     // the UB found in the previous iteration

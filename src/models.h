@@ -7,6 +7,8 @@
 #include "io.h"
 #include "gurobi_c++.h"
 
+#include "rng.h"
+
 using namespace std;
 
 typedef const vector<vector<bool>> cvv;
@@ -89,7 +91,7 @@ void update_LB(const vector<double>& W, const vector<bool>& currentCenters, doub
 void update_LB_contiguity(graph* g, const vector<double>& W, const vector<bool>& currentCenters, double f_val,
   const vector<vector<double>> &w_hat, vector< vector<double> > &LB1);
 
-vector<int> HessHeuristic(graph* g, const vector<vector<double> >& w, const vector<int>& population,
+vector<int> HessHeuristic(SimpleRNG* s, graph* g, const vector<vector<double> >& w, const vector<int>& population,
   int L, int U, int k, double &UB, int maxIterations, bool do_cuts = false);
 
 void ContiguityHeuristic(vector<int> &heuristicSolution, graph* g, const vector<vector<double> > &w, 

@@ -11,6 +11,8 @@
 #include <string>
 #include "common.h"
 
+#include "rng.h"
+
 const double VarFixingEpsilon = 0.00001;
 
 using namespace std;
@@ -38,6 +40,9 @@ int main(int argc, char *argv[])
   \tlcut\t\tHess model with LCUT\n", argv[0]);
     return 0;
   }
+
+  SimpleRNG simpleRNG;
+  simpleRNG.SetSeed(999);
 
   // parse config
   run_params rp;
@@ -127,7 +132,7 @@ int main(int argc, char *argv[])
   double UB = MYINFINITY;
   int maxIterations = 10;   // 10 iterations is often sufficient
   auto heuristic_start = chrono::steady_clock::now();
-  vector<int> heuristicSolution = HessHeuristic(g, w, population, L, U, k, UB, maxIterations, false);
+  vector<int> heuristicSolution = HessHeuristic(&simpleRNG, g, w, population, L, U, k, UB, maxIterations, false);
   chrono::duration<double> heuristic_duration = chrono::steady_clock::now() - heuristic_start;
   dump_maybe_inf(UB);
   ffprintf(rp.output, "%.2lf, ", heuristic_duration.count());
